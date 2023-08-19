@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Map with Latitude and Longitude</title>
+    
+    <!-- Include Leaflet.js library -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+
+    <!-- Define CSS for the map container -->
+    <style>
+        #map {
+            height: 900px;
+            width: 1600px;
+            margin: auto;
+            
+        }
+    </style>
+</head>
+<body>
+    <!-- Create a div to hold the map -->
+    <div id="map"></div>
+
+    <script>
+        fetch("http://localhost:3000/data")
+            .then(response => {
+                if (!response.ok) {
+                throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(jsonData => {
+                data = jsonData; // Assign the JSON data to the variable
+                GetMap(data.data) // Now you can log the data inside this block
+            })
+
+        function GetMap(data){
+            var map = L.map('map').setView([39.925533, 32.866287], 6);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+            for (let i = 0; i < data.length; i++) {
+                var latitude = data[i].latitude
+                var longitude = data[i].longitude
+                var marker = L.marker([latitude, longitude]).addTo(map);
+            }
+
+            //var latitude = 0
+            //var longitude = 0
+            //var marker = L.marker([latitude, longitude]).addTo(map);
+        }
+        // Customize the marker (optional)
+        //marker.bindPopup("<b>Hello!</b><br>This is a marker.").openPopup(); 
+    </script>
+</body>
+</html>
