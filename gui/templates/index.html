@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Türkiye Deprem</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.1/dist/MarkerCluster.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.1/dist/MarkerCluster.Default.css" />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet.markercluster@1.5.1/dist/leaflet.markercluster.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        #map {
+            height: 600px;
+            padding: 0;
+            margin: 0;
+        }
+        .primary{
+            background-color: #352F44;
+        }
+        .secondary{
+            background-color: #5C5470;
+        }
+        .third{
+            background-color: #B9B4C7;
+        }
+        .fourth{
+            background-color: #FAF0E6;
+        }
+        .root{
+            color: #fff4e9;
+        }
+        
+    </style>
+</head>
+<body class="primary root font-mono">
+    <div id="map"></div>
+    <div class="container py-4 mx-auto">
+
+        <h2 class="text-3xl py-2 font-bold">3'ün Üzerindeki Depremler: </h2>
+        <div class="flex flex-wrap my-4 gap-x-8 gap-y-12 justify-center" id="eqk"></div>
+        <button id="showMoreButton" class="bg-blue-500 text-white px-4 py-2 mt-4 rounded-md">Show More</button>
+        <div id="storage" class="hidden"></div>
+
+    </div>
+
+    <script>
+        fetch("http://localhost:3000/data")
+            .then(response => {
+                if (!response.ok) {
+                throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(jsonData => {
+                data = jsonData;
+                GetMap(data.data)
+            })
+
+        function GetMap(data){
+            var map = L.map('map').setView([38.734802, 35.467987], 6);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+            var markers = L.markerClusterGroup();
+
+            for (let i = 0; i < data.length; i++) {
+                var latitude = data[i].latitude;
+                var longitude = data[i].longitude;
+                var marker = L.marker([latitude, longitude]);
+                markers.addLayer(marker);
+
+                var pp = "Büyülük: " + data[i].magnitude + "<br>Konum: " + data[i].location + "<br>Derinlik (KM) : " + data[i].depth
+
+                marker.bindPopup( pp );
+                markers.addLayer(marker);
+
+                if (data[i].magnitude >= 3) {
+                    var divContainer = document.createElement("div");
+                    divContainer.className = "relative h-44 w-44";
+        
+                    var divRight = document.createElement("div");
+                    divRight.className = "absolute right-4 bottom-4 h-44 w-44 third rounded-xl";
+        
+                    var divLeft = document.createElement("div");
+                    divLeft.className = "absolute p-2 h-44 w-44 secondary rounded-xl";
+        
+                    divContainer.appendChild(divRight);
+                    divContainer.appendChild(divLeft);
+                    divLeft.innerHTML = "Büyülük: " + data[i].magnitude + "<br>Konum: " + data[i].location + "<br>Derinlik (KM) : " + data[i].depth
+        
+                    document.getElementById("eqk").appendChild(divContainer);
+                }
+            }
+            map.addLayer(markers);
+        }
+    </script>
+
+    <script>
+        //storage
+    </script>
+</body>
+</html>

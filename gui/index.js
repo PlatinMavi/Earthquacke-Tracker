@@ -4,7 +4,7 @@ const fs = require('fs');
 const app = express()
 
 app.get("/", (req,res)=>{
-    res.sendFile(__dirname+"/index.html")
+    res.sendFile(__dirname+"/templates/index.html")
 })
 
 app.get("/data", (req,res)=>{
@@ -18,7 +18,13 @@ app.get("/data", (req,res)=>{
             const response = []
 
             for (let i = 0; i < jsonData.data.length; i++) {
-                response.push({"latitude":jsonData.data[i].latitude,"longitude":jsonData.data[i].longitude})
+                response.push({
+                  "latitude":jsonData.data[i].latitude,
+                  "longitude":jsonData.data[i].longitude,
+                  "magnitude":jsonData.data[i].magnitude,
+                  "location":jsonData.data[i].location,
+                  "depth": jsonData.data[i].depth
+                })
             }
 
             res.json({"data":response});
