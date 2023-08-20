@@ -1,0 +1,20 @@
+#map {
+    height: 600px;
+    padding: 0;
+    margin: 0;
+}
+.primary{
+    background-color: #352F44;
+}
+.secondary{
+    background-color: #5C5470;
+}
+.third{
+    background-color: #B9B4C7;
+}
+.fourth{
+    background-color: #FAF0E6;
+}
+.root{
+    color: #fff4e9;
+}

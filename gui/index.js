@@ -3,6 +3,8 @@ const fs = require('fs');
 
 const app = express()
 
+app.use(express.static('public'))
+
 app.get("/", (req,res)=>{
     res.sendFile(__dirname+"/templates/index.html")
 })
@@ -23,7 +25,8 @@ app.get("/data", (req,res)=>{
                   "longitude":jsonData.data[i].longitude,
                   "magnitude":jsonData.data[i].magnitude,
                   "location":jsonData.data[i].location,
-                  "depth": jsonData.data[i].depth
+                  "depth": jsonData.data[i].depth,
+                  "eventDate": jsonData.data[i].eventDate
                 })
             }
 
